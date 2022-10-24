@@ -16,33 +16,80 @@ type Props = {
 };
 
 const StageCompoent = ({ clubData }: Props) => {
-  const [dis, setDis] = useState(0);
+  const [lastDis, setLastDis] = useState<number | null>(null);
+  const [lastCenter, setLastCenter] = useState<{ x: number; y: number } | null>(
+    null,
+  );
   const [isPinching, setIsPinching] = useState(false);
   const [isDrag, setIsDrag] = useState(false);
   const { position, dispatch } = usePosition();
 
+  const getDistance = (
+    p1: { x: number; y: number },
+    p2: { x: number; y: number },
+  ) => {
+    return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+  };
+
+  const getCenter = (
+    p1: { x: number; y: number },
+    p2: { x: number; y: number },
+  ) => {
+    return {
+      x: (p1.x + p2.x) / 2,
+      y: (p1.y + p2.y) / 2,
+    };
+  };
+
   const handleTouchMoveEvent = (e: KonvaEventObject<TouchEvent>) => {
-    if (e.evt.changedTouches.length > 1) {
+    e.evt.preventDefault();
+    if (e.evt.touches.length > 1) {
       setIsPinching(true);
-      const disX =
-        e.evt.changedTouches[1].clientX - e.evt.changedTouches[0].clientX;
-      const disY =
-        e.evt.changedTouches[1].clientY - e.evt.changedTouches[0].clientY;
-      const curDis = Math.sqrt(Math.pow(disX, 2) + Math.pow(disY, 2));
 
-      let lastDis = dis;
+      const touch1 = e.evt.touches[0];
+      const touch2 = e.evt.touches[1];
 
-      if (lastDis == 0) {
-        lastDis = curDis;
+      const p1 = { x: touch1.clientX, y: touch1.clientY };
+      const p2 = { x: touch2.clientX, y: touch2.clientY };
+
+      if (!lastCenter) {
+        setLastCenter(getCenter(p1, p2));
+        return;
+      }
+      const newCenter = getCenter(p1, p2);
+
+      const dis = getDistance(p1, p2);
+      const tmpLastDis = dis;
+      if (!lastDis) {
+        setLastDis(dis);
       }
 
-      const newScale: Scale = {
-        scaleX: position.scale.scaleX * (curDis / lastDis),
-        scaleY: position.scale.scaleY * (curDis / lastDis),
+      const pointTo = {
+        x: (newCenter.x - position.x) / position.scale.scaleX,
+        y: (newCenter.y - position.y) / position.scale.scaleY,
       };
+      const scale = lastDis
+        ? position.scale.scaleX * (dis / lastDis)
+        : position.scale.scaleX * (dis / tmpLastDis);
 
-      dispatch({ type: 'CHANGE_SCALE', payload: newScale });
-      setDis(curDis);
+      const dx = newCenter.x - lastCenter.x;
+      const dy = newCenter.y - lastCenter.y;
+
+      const newPos = {
+        x: newCenter.x - pointTo.x * scale + dx,
+        y: newCenter.y - pointTo.y * scale + dy,
+      };
+      dispatch({
+        type: 'SET_POSITION',
+        payload: {
+          ...position,
+          x: newPos.x,
+          y: newPos.y,
+          scale: { scaleX: scale, scaleY: scale },
+        },
+      });
+      setLastCenter(newCenter);
+      setLastDis(dis);
     }
   };
 
@@ -52,7 +99,8 @@ const StageCompoent = ({ clubData }: Props) => {
       height={window.innerHeight}
       onTouchMove={e => handleTouchMoveEvent(e)}
       onTouchEnd={() => {
-        setDis(0);
+        setLastDis(0);
+        setLastCenter(null);
         setIsPinching(false);
       }}
       scaleX={position.scale.scaleX}

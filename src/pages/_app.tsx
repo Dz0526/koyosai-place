@@ -20,15 +20,13 @@ function MyApp({ Component, pageProps }: AppProps) {
           url: '',
         }}
       />
-      <ClubContextProvider>
-        <PositionContextProvider>
-          <FormUiContextProvider>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </FormUiContextProvider>
-        </PositionContextProvider>
-      </ClubContextProvider>
+      <PositionContextProvider>
+        <FormUiContextProvider>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </FormUiContextProvider>
+      </PositionContextProvider>
     </>
   );
 }

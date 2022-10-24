@@ -1,17 +1,17 @@
 import dynamic from 'next/dynamic';
 import { FloorButton } from 'components/FloorButton';
 import { useClub } from 'hooks/useClub';
+import { koyosaiData } from 'mock/api/club';
 
 const StageCompoent = dynamic(() => import('../components/StageComponent'), {
   ssr: false,
 });
 
 const KonvaPage = () => {
-  const { club } = useClub();
   return (
     <>
       <main>
-        <StageCompoent clubData={club} />
+        <StageCompoent clubData={koyosaiData} />
         <FloorButton />
       </main>
     </>
