@@ -10,21 +10,19 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <DefaultSeo
-        defaultTitle='Place 部活動の場所を知ろう'
-        description='Place は豊田高専内の部活動の場所を見つけるための地図アプリです'
+        defaultTitle='KoyoFes Navi 展示の場所を知ろう'
+        description='KoyoFes Navi は豊田高専こうよう祭の展示の場所を見つけるための地図アプリです'
         openGraph={{
-          title: 'Place 部活動の場所を知ろう',
+          title: 'KoyoFes Navi 展示の場所を知ろう',
           description:
-            'Place は豊田高専内の部活動の場所を見つけるための地図アプリです',
+            'KoyoFes Navi は豊田高専こうよう祭の展示の場所を見つけるための地図アプリです',
           site_name: 'Place',
           url: '',
         }}
       />
       <PositionContextProvider>
         <FormUiContextProvider>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          <Component {...pageProps} />
         </FormUiContextProvider>
       </PositionContextProvider>
     </>
