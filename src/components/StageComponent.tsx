@@ -2,9 +2,11 @@ import { Stage, Layer } from 'react-konva';
 import { MapImage } from './MapImage';
 import { useState } from 'react';
 import { KonvaEventObject } from 'konva/lib/Node';
-import { MapPin } from './MapPin';
 import { Club } from 'context/ClubContext';
 import { usePosition } from 'hooks/usePosition';
+import { ExihibitImage } from './exihibit/ExihibitImage';
+import { exihibitData } from 'mock/api/exihibit';
+import { useExihibitModal } from 'hooks/useExihibitModal';
 
 export type Scale = {
   scaleX: number;
@@ -15,7 +17,7 @@ type Props = {
   clubData: Club[];
 };
 
-const StageCompoent = ({ clubData }: Props) => {
+const StageCompoent = ({}: Props) => {
   const [lastDis, setLastDis] = useState<number | null>(null);
   const [lastCenter, setLastCenter] = useState<{ x: number; y: number } | null>(
     null,
@@ -23,6 +25,7 @@ const StageCompoent = ({ clubData }: Props) => {
   const [isPinching, setIsPinching] = useState(false);
   const [isDrag, setIsDrag] = useState(false);
   const { position, dispatch } = usePosition();
+  const { exihibitModal, setExihibitModal } = useExihibitModal();
 
   const getDistance = (
     p1: { x: number; y: number },
@@ -114,26 +117,68 @@ const StageCompoent = ({ clubData }: Props) => {
           payload: { x: e.target.x(), y: e.target.y(), search: false },
         })
       }
-      onDragStart={() => setIsDrag(true)}
+      onDragStart={() => {
+        setIsDrag(true);
+        console.log(position.x, position.y);
+      }}
       onDragEnd={() => setIsDrag(false)}
       className={`cursor-grab ${isDrag && 'cursor-grabbing'} z-auto`}
     >
       <Layer>
         {position.floor === 1 ? (
-          <MapImage alt='map floor 1' imageName='/map1.png' />
+          <MapImage
+            alt='map floor 1'
+            imageName={
+              '/1F.png' /*process.env.NEXT_PUBLIC_API_ORIGIN + '/media/map/1F.png'*/
+            }
+            width={904}
+            height={1295}
+          />
         ) : position.floor === 2 ? (
-          <MapImage alt='map floor 2' imageName='/map2.png' />
+          <MapImage
+            alt='map floor 2'
+            imageName={
+              '/2F.png' /*process.env.NEXT_PUBLIC_API_ORIGIN + '/media/map/2F.png'*/
+            }
+            width={904}
+            height={1187}
+          />
         ) : (
-          <MapImage alt='map floor 3' imageName='/map3.png' />
+          <MapImage
+            alt='map floor 3'
+            imageName={
+              '/3F.png' /*process.env.NEXT_PUBLIC_API_ORIGIN + '/media/map/3F.png'*/
+            }
+            width={904}
+            height={1187}
+          />
         )}
-        {clubData
-          .filter(club => club.room.stair === position.floor)
-          .map(club => (
-            <MapPin
-              x={club.room.positionX}
-              y={club.room.positionY}
-              name={club.name}
-              key={club.name}
+        {exihibitData
+          .filter(
+            exihitbit =>
+              Number(
+                exihitbit.places[0].image[exihitbit.places[0].image.length - 6],
+              ) == position.floor,
+          )
+          .map(exihibit => (
+            <ExihibitImage
+              key={exihibit.name}
+              imageUrl={exihibit.imageUrl}
+              x={exihibit.places[0].positionX}
+              y={exihibit.places[0].positionY}
+              onTouch={() => {
+                setExihibitModal({
+                  ...exihibitModal,
+                  isOpen: true,
+                  exihibit: {
+                    ...exihibitModal.exihibit,
+                    name: exihibit.name,
+                    imageUrl: exihibit.imageUrl,
+                    description: exihibit.description,
+                    latestWatingTime: exihibit.latestWatingTime,
+                  },
+                });
+              }}
             />
           ))}
       </Layer>

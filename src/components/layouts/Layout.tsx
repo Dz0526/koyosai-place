@@ -5,7 +5,8 @@ import { usePosition } from 'hooks/usePosition';
 import { SearchInput } from 'components/SearchInput';
 import { useFormUi } from 'hooks/useFormUi';
 import { useClub } from 'hooks/useClub';
-import { clubsToPosition, clubToPosition } from 'types/position';
+import { clubToPosition } from 'types/position';
+import { exihibitData } from 'mock/api/exihibit';
 
 type Props = {
   children: ReactElement;
@@ -50,7 +51,7 @@ export const Layout = ({ children }: Props) => {
             inputClubName={clubName}
             setInputClubName={setClubName}
             submit={submit}
-            clubData={clubsToPosition(club)}
+            exihibitData={exihibitData}
           />
           <button type='submit' className='absolute inset-y-0 right-0 pr-2'>
             <FontAwesomeIcon

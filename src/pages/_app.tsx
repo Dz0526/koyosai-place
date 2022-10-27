@@ -5,6 +5,9 @@ import { DefaultSeo } from 'next-seo';
 import { PositionContextProvider } from 'context/PositionContext';
 import { FormUiContextProvider } from 'context/FormUiContext';
 import { ClubContextProvider } from 'context/ClubContext';
+import { Dialog, Transition } from '@headlessui/react';
+import { Fragment, useState } from 'react';
+import { ExihibitModalContextProvider } from 'context/ExihibitModalContext';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -22,7 +25,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       />
       <PositionContextProvider>
         <FormUiContextProvider>
-          <Component {...pageProps} />
+          <ExihibitModalContextProvider>
+            <Component {...pageProps} />
+          </ExihibitModalContextProvider>
         </FormUiContextProvider>
       </PositionContextProvider>
     </>
