@@ -11,9 +11,11 @@ type Scale = {
 type Props = {
   alt: string;
   imageName: string;
+  width: number;
+  height: number;
 };
 
-export const MapImage: FC<Props> = ({ alt, imageName }) => {
+export const MapImage: FC<Props> = ({ alt, imageName, width, height }) => {
   const [image] = useImage(imageName);
   const [scale, setScale] = useState<Scale>({ scaleX: 1, scaleY: 1 });
 
@@ -30,8 +32,8 @@ export const MapImage: FC<Props> = ({ alt, imageName }) => {
     <Image
       image={image}
       alt={alt}
-      width={2016}
-      height={1512}
+      width={width}
+      height={height}
       onWheel={e => handleWheelEvent(e)}
     />
   );

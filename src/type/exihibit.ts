@@ -6,10 +6,13 @@ export type Exihibit = {
   latestWatingTime: WaitingTime;
 };
 
+export type ExihibitWithoutPlaces = Omit<Exihibit, 'places'>;
+
 export type Place = {
   name: string;
   positionX: number;
   positionY: number;
+  image: string;
 };
 
 export type WaitingTime = {
