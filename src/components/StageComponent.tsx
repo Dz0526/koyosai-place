@@ -7,6 +7,7 @@ import { usePosition } from 'hooks/usePosition';
 import { ExihibitImage } from './exihibit/ExihibitImage';
 import { exihibitData } from 'mock/api/exihibit';
 import { useExihibitModal } from 'hooks/useExihibitModal';
+import { Exihibit } from 'type/exihibit';
 
 export type Scale = {
   scaleX: number;
@@ -14,10 +15,10 @@ export type Scale = {
 };
 
 type Props = {
-  clubData: Club[];
+  exhibitData: Exihibit[];
 };
 
-const StageCompoent = ({}: Props) => {
+const StageCompoent = ({ exhibitData }: Props) => {
   const [lastDis, setLastDis] = useState<number | null>(null);
   const [lastCenter, setLastCenter] = useState<{ x: number; y: number } | null>(
     null,
@@ -119,7 +120,6 @@ const StageCompoent = ({}: Props) => {
       }
       onDragStart={() => {
         setIsDrag(true);
-        console.log(position.x, position.y);
       }}
       onDragEnd={() => setIsDrag(false)}
       className={`cursor-grab ${isDrag && 'cursor-grabbing'} z-auto`}
@@ -153,34 +153,34 @@ const StageCompoent = ({}: Props) => {
             height={1187}
           />
         )}
-        {exihibitData
-          .filter(
-            exihitbit =>
-              Number(
-                exihitbit.places[0].image[exihitbit.places[0].image.length - 6],
-              ) == position.floor,
-          )
-          .map(exihibit => (
-            <ExihibitImage
-              key={exihibit.name}
-              imageUrl={exihibit.imageUrl}
-              x={exihibit.places[0].positionX}
-              y={exihibit.places[0].positionY}
-              onTouch={() => {
-                setExihibitModal({
-                  ...exihibitModal,
-                  isOpen: true,
-                  exihibit: {
-                    ...exihibitModal.exihibit,
-                    name: exihibit.name,
-                    imageUrl: exihibit.imageUrl,
-                    description: exihibit.description,
-                    latestWatingTime: exihibit.latestWatingTime,
-                  },
-                });
-              }}
-            />
-          ))}
+        {exhibitData.map(exhibit =>
+          exhibit.places
+            .filter(
+              place =>
+                Number(place.image[place.image.length - 6]) == position.floor,
+            )
+            .map((place, i) => (
+              <ExihibitImage
+                key={i}
+                imageUrl={exhibit.imageUrl}
+                x={place.positionX}
+                y={place.positionY}
+                onTouch={() => {
+                  setExihibitModal({
+                    ...exihibitModal,
+                    isOpen: true,
+                    exihibit: {
+                      ...exihibitModal.exihibit,
+                      name: exhibit.name,
+                      imageUrl: exhibit.imageUrl,
+                      description: exhibit.description,
+                      latestWatingTime: exhibit.latestWatingTime,
+                    },
+                  });
+                }}
+              />
+            )),
+        )}
       </Layer>
     </Stage>
   );
