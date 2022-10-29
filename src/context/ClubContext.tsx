@@ -1,4 +1,4 @@
-import { fetcher, generateFetcher } from 'lib/fetcher';
+import { generateFetcher } from 'lib/fetcher';
 import { createContext, ReactNode } from 'react';
 import useSWR from 'swr';
 

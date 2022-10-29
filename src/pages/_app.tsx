@@ -8,6 +8,7 @@ import { ClubContextProvider } from 'context/ClubContext';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useState } from 'react';
 import { ExihibitModalContextProvider } from 'context/ExihibitModalContext';
+import { ExihibitContextProvider } from 'context/ExihibitContext';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -26,7 +27,12 @@ function MyApp({ Component, pageProps }: AppProps) {
       <PositionContextProvider>
         <FormUiContextProvider>
           <ExihibitModalContextProvider>
-            <Component {...pageProps} />
+            <ExihibitContextProvider>
+              <Component {...pageProps} />
+              <footer className='text-center border-t mt-3'>
+                <p>Copyright © Koyosai2022</p>
+              </footer>
+            </ExihibitContextProvider>
           </ExihibitModalContextProvider>
         </FormUiContextProvider>
       </PositionContextProvider>

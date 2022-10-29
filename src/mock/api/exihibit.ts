@@ -4,8 +4,7 @@ export const exihibitData: Exihibit[] = [
   {
     name: 'コンピュータ部',
     imageUrl:
-      process.env.NEXT_PUBLIC_API_ORIGIN +
-      '/media/exhibits/%E3%82%B3%E3%83%B3%E3%83%92%E3%83%A5%E3%83%BC%E3%82%BF%E9%83%A8.jpg',
+      'https://koyofes-navi.s3.amazonaws.com/media/exhibits/%E3%82%B3%E3%83%B3%E3%83%92%E3%83%A5%E3%83%BC%E3%82%BF%E9%83%A8.jpg',
     description: '楽しいです',
     places: [
       { name: '工作室', positionX: 488, positionY: 613, image: '1F.jpg' },

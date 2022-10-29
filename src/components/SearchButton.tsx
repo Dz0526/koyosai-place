@@ -1,23 +1,22 @@
 import { AiOutlineSearch } from 'react-icons/ai';
 import { Transition, Dialog } from '@headlessui/react';
 import { SearchInput } from './SearchInput';
-import { exihibitData } from 'mock/api/exihibit';
 import { exihibitToPosition } from 'func/exihibit-to-position';
 import { usePosition } from 'hooks/usePosition';
 import { Fragment, useState } from 'react';
 import { useExihibitModal } from 'hooks/useExihibitModal';
+import { useExhibit } from 'hooks/useExhibit';
 
 export const SearchButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [exihibitName, setExihibitName] = useState('');
   const { dispatch } = usePosition();
   const { exihibitModal, setExihibitModal } = useExihibitModal();
+  const { exhibit } = useExhibit();
 
   const submit = (suggestion?: string) => {
     const inputOrSuggestion = suggestion ?? exihibitName;
-    const selectedExihibit = exihibitData.find(
-      c => c.name == inputOrSuggestion,
-    );
+    const selectedExihibit = exhibit.find(c => c.name == inputOrSuggestion);
     const positionData =
       selectedExihibit && exihibitToPosition(selectedExihibit);
     if (positionData) {
@@ -90,9 +89,9 @@ export const SearchButton = () => {
                   </Dialog.Title>
                   <div className='mt-2'>
                     <SearchInput
-                      inputClubName={exihibitName}
-                      setInputClubName={setExihibitName}
-                      exihibitData={exihibitData}
+                      inputExhibitName={exihibitName}
+                      setInputExhibitName={setExihibitName}
+                      exihibitData={exhibit}
                       submit={submit}
                     />
                   </div>
