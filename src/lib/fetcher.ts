@@ -91,3 +91,14 @@ const requestConfig = (): AxiosRequestConfig => {
     baseURL: process.env.NEXT_PUBLIC_API_ORIGIN,
   };
 };
+
+const requestConfigWithAuth = (token: string): AxiosRequestConfig => {
+  return {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    withCredentials: true,
+    baseURL: process.env.NEXT_PUBLIC_API_ORIGIN,
+  };
+};
