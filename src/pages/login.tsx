@@ -2,8 +2,11 @@ import Axios from 'axios';
 import { Header } from 'components/Header';
 import { formUrlEncodedPost } from 'lib/client';
 import { setToken } from 'lib/tokenStore';
-import Router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { FormEvent, useState } from 'react';
+import React from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 type LoginRequest = {
   username: string;
@@ -30,11 +33,26 @@ const LoginPage = () => {
     isValidPassword: false,
   });
   const router = useRouter();
+  const loginFailure = () =>
+    toast.error('ログイン失敗', {
+      position: 'top-center',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      theme: 'light',
+    });
+  const loginSuccess = () =>
+    toast.success('ログイン成功！', {
+      position: 'top-center',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      theme: 'light',
+    });
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      console.log('unko');
       const params = new URLSearchParams();
       params.append('username', form.username);
       params.append('password', form.password);
@@ -43,14 +61,13 @@ const LoginPage = () => {
         '/auth/login',
         params,
       );
-      console.log(res);
       setToken(res.access_token);
 
+      loginSuccess();
       router.push('/admin');
     } catch (e) {
-      console.log(e);
       if (Axios.isAxiosError(e) && e.response && e.response.status == 400) {
-        alert('Login failed');
+        loginFailure();
       }
     }
   };
@@ -133,6 +150,7 @@ const LoginPage = () => {
           </form>
         </div>
       </main>
+      <ToastContainer />
     </>
   );
 };
