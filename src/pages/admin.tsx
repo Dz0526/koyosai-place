@@ -1,6 +1,9 @@
 import { RadioGroup } from '@headlessui/react';
 import { Header } from 'components/Header';
+import { AuthGuard } from 'guard/AuthGuard';
+import { clearToken } from 'lib/tokenStore';
 import { adminExhibitData } from 'mock/api/exihibit';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { AiOutlineLogout } from 'react-icons/ai';
 import { WaitingTimeType } from 'type/exihibit';
@@ -14,18 +17,20 @@ const waitingTimeType: WaitingTimeType[] = [
 const AdminPage = () => {
   const [selectedWaitingTimeType, setSelectedWaitingTimeType] =
     useState<WaitingTimeType>(adminExhibitData.latestWatingTime.type);
+  const router = useRouter();
   return (
-    <>
+    <AuthGuard>
       <Header title='展示情報更新'>
         <AiOutlineLogout
           className='self-center'
           onClick={() => {
-            return;
+            clearToken();
+            router.push('/login');
           }}
         />
       </Header>
       <main className='container mx-auto px-4 pt-10 space-y-5'>
-        <h1>コンピュータ部</h1>
+        <h1 className='font-bold text-2xl'>コンピュータ部</h1>
         <form className='flex flex-col space-y-10 text-lg'>
           <section>
             <p className='text-xl'>基本情報</p>
@@ -70,7 +75,7 @@ const AdminPage = () => {
                   defaultValue={adminExhibitData.latestWatingTime.minutes}
                   placeholder='分'
                   className='block border-b focus:outline-none focus:outline-b focus:border-orange-500'
-                  required
+                  required={selectedWaitingTimeType == '待ち時間あり'}
                   disabled={selectedWaitingTimeType != '待ち時間あり'}
                 />
               </label>
@@ -81,7 +86,7 @@ const AdminPage = () => {
           </button>
         </form>
       </main>
-    </>
+    </AuthGuard>
   );
 };
 
