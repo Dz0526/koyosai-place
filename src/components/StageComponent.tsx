@@ -2,10 +2,8 @@ import { Stage, Layer } from 'react-konva';
 import { MapImage } from './MapImage';
 import { useState } from 'react';
 import { KonvaEventObject } from 'konva/lib/Node';
-import { Club } from 'context/ClubContext';
 import { usePosition } from 'hooks/usePosition';
 import { ExihibitImage } from './exihibit/ExihibitImage';
-import { exihibitData } from 'mock/api/exihibit';
 import { useExihibitModal } from 'hooks/useExihibitModal';
 import { Exihibit } from 'type/exihibit';
 

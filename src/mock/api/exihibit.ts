@@ -23,3 +23,12 @@ export const exihibitData: Exihibit[] = [
     latestWatingTime: { type: '予約制', minutes: 0 },
   },
 ];
+
+export const adminExhibitData: Exihibit = {
+  name: 'コンピュータ部',
+  imageUrl:
+    'https://koyofes-navi.s3.amazonaws.com/media/exhibits/%E3%82%B3%E3%83%B3%E3%83%92%E3%83%A5%E3%83%BC%E3%82%BF%E9%83%A8.jpg',
+  description: '楽しいです',
+  places: [{ name: '工作室', positionX: 488, positionY: 613, image: '1F.jpg' }],
+  latestWatingTime: { type: '待ち時間あり', minutes: 30 },
+};
