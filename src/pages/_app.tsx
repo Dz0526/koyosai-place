@@ -1,12 +1,8 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
-import { Layout } from 'components/layouts/Layout';
 import { DefaultSeo } from 'next-seo';
 import { PositionContextProvider } from 'context/PositionContext';
 import { FormUiContextProvider } from 'context/FormUiContext';
-import { ClubContextProvider } from 'context/ClubContext';
-import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, useState } from 'react';
 import { ExihibitModalContextProvider } from 'context/ExihibitModalContext';
 import { ExihibitContextProvider } from 'context/ExihibitContext';
 
@@ -28,10 +24,14 @@ function MyApp({ Component, pageProps }: AppProps) {
         <FormUiContextProvider>
           <ExihibitModalContextProvider>
             <ExihibitContextProvider>
-              <Component {...pageProps} />
-              <footer className='text-center border-t mt-3'>
-                <p>Copyright © Koyosai2022</p>
-              </footer>
+              <div className='flex flex-col h-full'>
+                <div className='grow'>
+                  <Component {...pageProps} />
+                </div>
+                <footer className='text-center border-t mt-3'>
+                  <p>Copyright © Koyosai2022</p>
+                </footer>
+              </div>
             </ExihibitContextProvider>
           </ExihibitModalContextProvider>
         </FormUiContextProvider>
