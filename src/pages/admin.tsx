@@ -1,12 +1,16 @@
 import { RadioGroup } from '@headlessui/react';
 import { Header } from 'components/Header';
 import { AuthGuard } from 'guard/AuthGuard';
-import { clearToken } from 'lib/tokenStore';
+import { clearToken, getToken } from 'lib/tokenStore';
 import { adminExhibitData } from 'mock/api/exihibit';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { AiOutlineLogout } from 'react-icons/ai';
-import { WaitingTimeType } from 'type/exihibit';
+import { Exihibit, WaitingTimeType } from 'type/exihibit';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { failSomethingToast, successSomethingToast } from 'lib/toastify';
+import { post, put } from 'lib/client';
 
 const waitingTimeType: WaitingTimeType[] = [
   '予約制',
@@ -14,10 +18,57 @@ const waitingTimeType: WaitingTimeType[] = [
   '待ち時間なし',
 ];
 
+type CreateWaitingTimeRequest = {
+  type: WaitingTimeType;
+  minutes: number;
+};
+
+type CreateWaitingTimeResponse = {
+  type: WaitingTimeType;
+  minutes: number;
+};
+
+type EditExhibitDescriptionRequest = {
+  description: string;
+};
+
+type EditExhibitDescriptionResponse = Exihibit;
+
 const AdminPage = () => {
+  const [description, setDescription] = useState('');
   const [selectedWaitingTimeType, setSelectedWaitingTimeType] =
     useState<WaitingTimeType>(adminExhibitData.latestWatingTime.type);
+  const [minutes, setMinutes] = useState<number>(0);
   const router = useRouter();
+
+  const failUpdate = failSomethingToast('更新失敗');
+  const successUpdate = successSomethingToast('更新成功！');
+
+  const onSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    try {
+      const token = getToken();
+      if (!token) {
+        router.push('login');
+        return;
+      }
+      const waitingTime = post<
+        CreateWaitingTimeRequest,
+        CreateWaitingTimeResponse
+      >(
+        '/waiting-time',
+        { type: selectedWaitingTimeType, minutes: minutes },
+        token,
+      );
+      const exhibit = put<
+        EditExhibitDescriptionRequest,
+        EditExhibitDescriptionResponse
+      >('/exhibit', { description: description }, token);
+      successUpdate();
+    } catch (e) {
+      failUpdate();
+    }
+  };
   return (
     <AuthGuard>
       <Header title='展示情報更新'>
@@ -39,7 +90,11 @@ const AdminPage = () => {
               <input
                 className='block border-b focus:outline-none focus:outline-b focus:border-orange-500 w-full'
                 defaultValue={adminExhibitData.description}
+                value={description}
                 placeholder='紹介文を入力'
+                onChange={e => {
+                  setDescription(e.target.value);
+                }}
               />
             </label>
           </section>
@@ -72,11 +127,16 @@ const AdminPage = () => {
               <label className='block'>
                 <span className='font-bold text-sm'>待ち時間</span>
                 <input
+                  type={'number'}
                   defaultValue={adminExhibitData.latestWatingTime.minutes}
                   placeholder='分'
                   className='block border-b focus:outline-none focus:outline-b focus:border-orange-500'
                   required={selectedWaitingTimeType == '待ち時間あり'}
                   disabled={selectedWaitingTimeType != '待ち時間あり'}
+                  value={minutes}
+                  onChange={e => {
+                    setMinutes(Number(e.target.value));
+                  }}
                 />
               </label>
             </div>
@@ -86,6 +146,7 @@ const AdminPage = () => {
           </button>
         </form>
       </main>
+      <ToastContainer />
     </AuthGuard>
   );
 };

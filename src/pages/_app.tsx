@@ -16,7 +16,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           title: 'KoyoFes Navi 展示の場所を知ろう',
           description:
             'KoyoFes Navi は豊田高専こうよう祭の展示の場所を見つけるための地図アプリです',
-          site_name: 'Place',
+          site_name: 'KoyoFes Navi',
           url: '',
         }}
       />

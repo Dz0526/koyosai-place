@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 
 export const formUrlEncodedPost = async <RequestInterface, ResponseInterface>(
   path: string,
@@ -6,6 +6,26 @@ export const formUrlEncodedPost = async <RequestInterface, ResponseInterface>(
 ): Promise<ResponseInterface> => {
   return await axios
     .post<ResponseInterface>(path, params, formRequestConfig())
+    .then(res => res.data);
+};
+
+export const post = async <RequestInterface, ResponseInterface>(
+  path: string,
+  body: RequestInterface,
+  token: string,
+): Promise<ResponseInterface> => {
+  return await axios
+    .post<ResponseInterface>(path, body, requestConfigWithAuth(token))
+    .then(res => res.data);
+};
+
+export const put = async <RequestInterface, ResponseInterface>(
+  path: string,
+  body: RequestInterface,
+  token: string,
+): Promise<ResponseInterface> => {
+  return await axios
+    .put<ResponseInterface>(path, body, requestConfigWithAuth(token))
     .then(res => res.data);
 };
 
