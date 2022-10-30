@@ -29,12 +29,12 @@ export const ExihibitDrawer = () => {
           <div className='h-full w-full pr-20  text-center'>
             <Transition.Child
               as={Fragment}
-              enter='ease-out duration-300'
-              enterFrom='opacity-0 scale-95'
-              enterTo='opacity-100 scale-100'
-              leave='ease-in duration-200'
-              leaveFrom='opacity-100 scale-100'
-              leaveTo='opacity-0 scale-95'
+              enter='transition ease duration-300 transform'
+              enterFrom='-translate-x-full'
+              enterTo='translate-x-0'
+              leave='transition ease duration-300 transform'
+              leaveFrom='translate-x-0'
+              leaveTo='-translate-x-full'
             >
               <Dialog.Panel className='w-full h-full max-w-md transform overflow-hidden bg-white text-left align-middle shadow-xl transition-all'>
                 <img
