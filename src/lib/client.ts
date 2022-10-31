@@ -12,7 +12,7 @@ export const formUrlEncodedPost = async <RequestInterface, ResponseInterface>(
 export const post = async <RequestInterface, ResponseInterface>(
   path: string,
   body: RequestInterface,
-  token: string,
+  token: string | null,
 ): Promise<ResponseInterface> => {
   return await axios
     .post<ResponseInterface>(path, body, requestConfigWithAuth(token))
@@ -22,7 +22,7 @@ export const post = async <RequestInterface, ResponseInterface>(
 export const put = async <RequestInterface, ResponseInterface>(
   path: string,
   body: RequestInterface,
-  token: string,
+  token: string | null,
 ): Promise<ResponseInterface> => {
   return await axios
     .put<ResponseInterface>(path, body, requestConfigWithAuth(token))
@@ -49,7 +49,7 @@ const formRequestConfig = (): AxiosRequestConfig => {
   };
 };
 
-const requestConfigWithAuth = (token: string): AxiosRequestConfig => {
+const requestConfigWithAuth = (token: string | null): AxiosRequestConfig => {
   return {
     headers: {
       'Content-Type': 'application/json',

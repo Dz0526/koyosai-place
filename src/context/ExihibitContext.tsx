@@ -17,14 +17,13 @@ export const ExihibitContext = createContext<ExihibitContextState>({
 
 export const ExihibitContextProvider = ({ children }: Props) => {
   const { data, error } = useSWR<Exihibit[]>(
-    '/exhibit',
+    '/exhibits',
     generateExhibitFetcher,
   );
 
   if (error) return <>error</>;
   if (!data) return <>loading</>;
 
-  console.log(data);
   return (
     <ExihibitContext.Provider value={{ exihibit: data }}>
       {children}

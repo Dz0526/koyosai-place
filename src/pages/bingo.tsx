@@ -11,7 +11,6 @@ const BingoPage = () => {
   if (error) return <>error</>;
   if (!data) return <>loading</>;
 
-  console.log(data);
   // use mock data
   return (
     <div>

@@ -1,6 +1,11 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { Prize } from 'type/bingo';
-import { Exihibit, WaitingTimeType } from 'type/exihibit';
+import {
+  Exihibit,
+  reaturnWaitingTimeType,
+  WaitingTimeTypeServer,
+} from 'type/exihibit';
+import { getToken } from './tokenStore';
 
 type PlaceResponse = {
   name: string;
@@ -10,8 +15,8 @@ type PlaceResponse = {
 };
 
 type WaitingTimeResponse = {
-  type: WaitingTimeType;
-  minutes: number;
+  type: WaitingTimeTypeServer;
+  minutes: number | null;
 };
 
 type ExhibitResponse = {
@@ -38,6 +43,33 @@ export const generateFetcher = () => {
     axios.get(path, requestConfig()).then(res => res.data);
 };
 
+export const generateAdminExhibitFetcher: (
+  path: string,
+) => Promise<Exihibit> = async (path: string) => {
+  return axios
+    .get<ExhibitResponse>(path, requestConfigWithAuth())
+    .then(res => res.data)
+    .then(exhibitResponse => ({
+      name: exhibitResponse.name,
+      description: exhibitResponse.description,
+      imageUrl: exhibitResponse.image_url,
+      places: exhibitResponse.places.map(place => ({
+        name: place.name,
+        positionX: place.position_x,
+        positionY: place.position_y,
+        image: place.image,
+      })),
+      latestWatingTime: {
+        type:
+          exhibitResponse.latest_waiting_time &&
+          reaturnWaitingTimeType(exhibitResponse.latest_waiting_time.type),
+        minutes:
+          exhibitResponse.latest_waiting_time &&
+          exhibitResponse.latest_waiting_time.minutes,
+      },
+    }));
+};
+
 export const generateExhibitFetcher: (
   path: string,
 ) => Promise<Exihibit[]> = async (path: string) => {
@@ -58,7 +90,7 @@ export const generateExhibitFetcher: (
         latestWatingTime: {
           type:
             exhibitResponse.latest_waiting_time &&
-            exhibitResponse.latest_waiting_time.type,
+            reaturnWaitingTimeType(exhibitResponse.latest_waiting_time.type),
           minutes:
             exhibitResponse.latest_waiting_time &&
             exhibitResponse.latest_waiting_time.minutes,
@@ -92,11 +124,11 @@ const requestConfig = (): AxiosRequestConfig => {
   };
 };
 
-const requestConfigWithAuth = (token: string): AxiosRequestConfig => {
+const requestConfigWithAuth = (): AxiosRequestConfig => {
   return {
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${getToken()}`,
     },
     withCredentials: true,
     baseURL: process.env.NEXT_PUBLIC_API_ORIGIN,

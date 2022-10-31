@@ -1,9 +1,9 @@
 import Axios from 'axios';
 import { Header } from 'components/Header';
 import { formUrlEncodedPost } from 'lib/client';
-import { setToken } from 'lib/tokenStore';
+import { getToken, setToken } from 'lib/tokenStore';
 import { useRouter } from 'next/router';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import React from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -36,6 +36,10 @@ const LoginPage = () => {
   const router = useRouter();
   const loginFailure = failSomethingToast('ログイン失敗');
   const loginSuccess = successSomethingToast('ログイン成功！');
+
+  useEffect(() => {
+    if (getToken()) router.push('/admin');
+  }, []);
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -70,7 +74,6 @@ const LoginPage = () => {
           <form
             className='flex flex-col space-y-10 p-5 rounded-md bg-slate-50'
             onSubmit={async e => {
-              console.log('a');
               await onSubmit(e);
             }}
           >
