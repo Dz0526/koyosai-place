@@ -1,12 +1,13 @@
 import Axios from 'axios';
 import { Header } from 'components/Header';
 import { formUrlEncodedPost } from 'lib/client';
-import { setToken } from 'lib/tokenStore';
+import { getToken, setToken } from 'lib/tokenStore';
 import { useRouter } from 'next/router';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import React from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { failSomethingToast, successSomethingToast } from 'lib/toastify';
 
 type LoginRequest = {
   username: string;
@@ -33,22 +34,12 @@ const LoginPage = () => {
     isValidPassword: false,
   });
   const router = useRouter();
-  const loginFailure = () =>
-    toast.error('ログイン失敗', {
-      position: 'top-center',
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      theme: 'light',
-    });
-  const loginSuccess = () =>
-    toast.success('ログイン成功！', {
-      position: 'top-center',
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      theme: 'light',
-    });
+  const loginFailure = failSomethingToast('ログイン失敗');
+  const loginSuccess = successSomethingToast('ログイン成功！');
+
+  useEffect(() => {
+    if (getToken()) router.push('/admin');
+  }, []);
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -83,7 +74,6 @@ const LoginPage = () => {
           <form
             className='flex flex-col space-y-10 p-5 rounded-md bg-slate-50'
             onSubmit={async e => {
-              console.log('a');
               await onSubmit(e);
             }}
           >
@@ -120,7 +110,8 @@ const LoginPage = () => {
               <label>
                 <span className='font-bold text-sm'>パスワード</span>
                 <input
-                  placeholder='展示名を入力'
+                  type={'password'}
+                  placeholder='パスワードを入力'
                   className='block border-b focus:outline-none focus:outline-b focus:border-orange-500 w-full py-2'
                   value={form.password}
                   onChange={e => setForm({ ...form, password: e.target.value })}

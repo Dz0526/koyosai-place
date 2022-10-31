@@ -17,7 +17,35 @@ export type Place = {
 
 export type WaitingTime = {
   type: WaitingTimeType;
-  minutes: number;
+  minutes: number | null;
 };
 
 export type WaitingTimeType = '待ち時間なし' | '待ち時間あり' | '予約制';
+
+export type WaitingTimeTypeServer = 'RESERVATION' | 'WAITING' | 'IMMEDIATE';
+
+export const reaturnWaitingTimeTypeServer = (
+  type: WaitingTimeType,
+): WaitingTimeTypeServer => {
+  return type == '予約制'
+    ? 'RESERVATION'
+    : type == '待ち時間なし'
+    ? 'IMMEDIATE'
+    : 'WAITING';
+};
+
+export const reaturnWaitingTimeType = (
+  type: WaitingTimeTypeServer,
+): WaitingTimeType => {
+  return type == 'RESERVATION'
+    ? '予約制'
+    : type == 'IMMEDIATE'
+    ? '待ち時間なし'
+    : '待ち時間あり';
+};
+
+export const requestWaitingTimeType = {
+  予約制: 'RESEVERSATION',
+  待ち時間あり: 'WAITING',
+  待ち時間なし: 'IMMEDIATE',
+};
