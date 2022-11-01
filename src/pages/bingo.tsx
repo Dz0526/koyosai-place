@@ -14,12 +14,12 @@ const BingoPage = () => {
   // use mock data
   return (
     <div>
-      <Header title='残り数'>
+      <Header title='景品の残り数'>
         <HambugerMenu />
       </Header>
       <main className='container mx-auto px-5 pt-10'>
         <div className='grid grid-cols-2 gap-5'>
-          {prizeData.map((prize, i) => (
+          {data.map((prize, i) => (
             <ContentCard prize={prize} key={i} />
           ))}
         </div>
