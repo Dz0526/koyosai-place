@@ -57,7 +57,7 @@ export const SearchButton = () => {
             setExihibitName('');
           }}
         >
-          <Transition.Child
+          {/* <Transition.Child
             as={Fragment}
             enter='ease-out duration-300'
             enterFrom='opacity-0'
@@ -67,10 +67,10 @@ export const SearchButton = () => {
             leaveTo='opacity-0'
           >
             <div className='fixed inset-0 bg-black bg-opacity-25' />
-          </Transition.Child>
+          </Transition.Child> */}
 
           <div className='fixed inset-0 overflow-y-auto'>
-            <div className='flex min-h-full items-center justify-center p-4 text-center'>
+            <div className='flex h-full items-center justify-center p-4 text-center'>
               <Transition.Child
                 as={Fragment}
                 enter='ease-out duration-300'
@@ -80,19 +80,14 @@ export const SearchButton = () => {
                 leaveFrom='opacity-100 scale-100'
                 leaveTo='opacity-0 scale-95'
               >
-                <Dialog.Panel className='w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all'>
-                  <Dialog.Title
-                    as='h3'
-                    className='text-lg font-medium leading-6 text-gray-900'
-                  >
-                    展示検索
-                  </Dialog.Title>
-                  <div className='mt-2'>
+                <Dialog.Panel className='w-full h-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all'>
+                  <div className='mt-2 h-full'>
                     <SearchInput
                       inputExhibitName={exihibitName}
                       setInputExhibitName={setExihibitName}
                       exihibitData={exhibit}
                       submit={submit}
+                      close={() => setIsOpen(false)}
                     />
                   </div>
                 </Dialog.Panel>
