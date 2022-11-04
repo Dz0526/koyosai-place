@@ -8,7 +8,7 @@ export const ContentCard = ({ prize }: Props) => {
   return (
     <div className='w-full aspect-square relative'>
       <img
-        className='w-full h-full object-cover rounded-lg'
+        className='w-full h-full object-cover rounded-lg border border-slate-300'
         src={prize.url}
         alt='contents'
       />
