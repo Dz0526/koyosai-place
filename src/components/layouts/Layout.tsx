@@ -48,6 +48,9 @@ export const Layout = ({ children }: Props) => {
           className='relative grow-0'
         >
           <SearchInput
+            close={() => {
+              return;
+            }}
             inputExhibitName={clubName}
             setInputExhibitName={setClubName}
             submit={submit}
