@@ -26,14 +26,6 @@ export const HambugerMenu = () => {
             </button>
           </Link>
         </Menu.Item>
-        <Menu.Item>
-          <Link href={'/bingo'} passHref>
-            <button className='group flex w-full items-center rounded-md px-2 py-2'>
-              <AiOutlineInfoCircle className='mr-2 h-5 w-5' />
-              Author
-            </button>
-          </Link>
-        </Menu.Item>
       </Menu.Items>
     </Menu>
   );
