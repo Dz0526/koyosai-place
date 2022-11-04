@@ -8,6 +8,8 @@ import React from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { failSomethingToast, successSomethingToast } from 'lib/toastify';
+import { Listbox } from '@headlessui/react';
+import { useExhibit } from 'hooks/useExhibit';
 
 type LoginRequest = {
   username: string;
@@ -25,10 +27,9 @@ type ValidateUiState = {
 };
 
 const LoginPage = () => {
-  const [form, setForm] = useState<LoginRequest>({
-    username: '',
-    password: '',
-  });
+  const { exhibit } = useExhibit();
+  const [userName, setUserName] = useState(exhibit[0].name);
+  const [password, setPassword] = useState('');
   const [validateUiState, setValidateUiState] = useState<ValidateUiState>({
     isValidUsername: false,
     isValidPassword: false,
@@ -45,8 +46,8 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       const params = new URLSearchParams();
-      params.append('username', form.username);
-      params.append('password', form.password);
+      params.append('username', userName);
+      params.append('password', password);
 
       const res = await formUrlEncodedPost<URLSearchParams, LoginResponse>(
         '/auth/login',
@@ -78,12 +79,9 @@ const LoginPage = () => {
             }}
           >
             <div>
-              {!validateUiState.isValidUsername && (
-                <p className='text-sm text-red-500'>必須です！</p>
-              )}
               <label>
-                <span className='font-bold text-sm'>展示名</span>
-                <input
+                <span className='font-bold text-sm block'>展示名</span>
+                {/* <input
                   placeholder='展示名を入力'
                   className='block border-b focus:outline-none focus:outline-b focus:border-orange-500 w-full py-2'
                   value={form.username}
@@ -100,7 +98,19 @@ const LoginPage = () => {
                         })
                   }
                   required
-                />
+                /> */}
+                <Listbox value={userName} onChange={setUserName}>
+                  <Listbox.Button className='relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm'>
+                    {userName}
+                  </Listbox.Button>
+                  <Listbox.Options className='className=absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'>
+                    {exhibit.map(exhibit => (
+                      <Listbox.Option key={exhibit.name} value={exhibit.name}>
+                        {exhibit.name}
+                      </Listbox.Option>
+                    ))}
+                  </Listbox.Options>
+                </Listbox>
               </label>
             </div>
             <div>
@@ -113,8 +123,8 @@ const LoginPage = () => {
                   type={'password'}
                   placeholder='パスワードを入力'
                   className='block border-b focus:outline-none focus:outline-b focus:border-orange-500 w-full py-2'
-                  value={form.password}
-                  onChange={e => setForm({ ...form, password: e.target.value })}
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
                   onBlur={e =>
                     e.target.value.length != 0
                       ? setValidateUiState({
@@ -132,9 +142,7 @@ const LoginPage = () => {
             </div>
             <button
               className='rounded-md bg-orange-500 text-white py-2 disabled:opacity-50'
-              disabled={
-                !(form.username.length != 0 && form.password.length != 0)
-              }
+              disabled={!(userName.length != 0 && password.length != 0)}
             >
               ログイン
             </button>
