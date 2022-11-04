@@ -2,7 +2,6 @@ import { ContentCard } from 'components/bingo/ContentCard';
 import { HambugerMenu } from 'components/HambugerMenu';
 import { Header } from 'components/Header';
 import { generateBingoFetcher } from 'lib/fetcher';
-import { prizeData } from 'mock/api/bingo';
 import useSWR from 'swr';
 
 const BingoPage = () => {
